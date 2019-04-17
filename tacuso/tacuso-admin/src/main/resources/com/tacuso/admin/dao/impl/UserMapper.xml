@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.UserMapper">
+
+
+    <resultMap id="user" type="com.tacuso.admin.entity.User">
+        <result column="uid" property="uid" />
+        <result column="wx_uid" property="wx_uid" />
+        <result column="bindphone" property="bindphone" />
+        <result column="nickname" property="nickname" />
+        <result column="email" property="email" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="is_employee" property="is_employee" />
+        <result column="growth" property="growth" />
+        <result column="score" property="score" />
+        <result column="level_id" property="level_id" />
+        <result column="credit_level_id" property="credit_level_id" />
+        <result column="rt" property="rt" />
+        <result column="ut" property="ut" />
+        <result column="dt" property="dt" />
+    </resultMap>
+    
+    <resultMap id="baseUser" type="com.tacuso.admin.entity.User">
+        <result column="uid" property="uid" />
+        <result column="wx_uid" property="wx_uid" />
+        <result column="bindphone" property="bindphone" />
+        <result column="nickname" property="nickname" />
+        <result column="email" property="email" />
+        <result column="username" property="username" />
+        <result column="is_employee" property="is_employee" />
+        <result column="growth" property="growth" />
+        <result column="score" property="score" />
+        <result column="level_id" property="level_id" />
+        <result column="credit_level_id" property="credit_level_id" />
+    </resultMap>
+
+    <resultMap id="wxUser" type="com.tacuso.admin.entity.User">
+
+    </resultMap>
+
+    <!-- 分组-->
+    <sql id="limit">
+        <if test="pageNum != null and pageSize != null">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </sql>
+
+    <sql id="user_condition">
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="userCommonVo.uid != null and userCommonVo.uid != ''">
+                and uid = #{userCommonVo.uid,jdbcType=INTEGER}
+            </if>
+            <if test="userCommonVo.wx_uid != null and userCommonVo.wx_uid != ''">
+                and wx_uid = #{userCommonVo.wx_uid,jdbcType=INTEGER}
+            </if>
+            <if test="userCommonVo.bindphone != null and userCommonVo.bindphone != ''">
+                and bindphone like '%${userCommonVo.bindphone}%'
+            </if>
+            <if test="userCommonVo.nickname != null and userCommonVo.nickname != ''">
+                and nickname like '%${userCommonVo.nickname}%'
+            </if>
+            <if test="userCommonVo.email != null and userCommonVo.email != ''">
+                and email like '%${userCommonVo.email}%'
+            </if>
+            <if test="userCommonVo.username != null and userCommonVo.username != ''">
+                and username like '%${userCommonVo.username}%'
+            </if>
+        </trim>
+    </sql>
+
+    <select id="getUserCount" resultType="int">
+      select count(1) from tacuso_user <include refid="user_condition" />
+    </select>
+
+    <select id="queryUserList"  resultMap="user">
+       select uid,wx_uid,bindphone,nickname,email,username,is_employee,growth ,score , level_id, credit_level_id from tacuso_user <include refid="user_condition" />
+    </select>
+
+    <select id="getAllUser" resultType="com.tacuso.admin.entity.User">
+      select uid,wx_uid,bindphone,nickname,email,username,is_employee,growth ,score , level_id, credit_level_id from tacuso_user
+    </select>
+
+
+    <!--
+    插入测试数据
+     insert into tacuso_user (`wx_uid`,`bindphone`,`nickname`,`email`,username,password,salt) values ('2','asdsad','123123','124124','123','4asda123','123123');
+    -->
+
+    
+</mapper>

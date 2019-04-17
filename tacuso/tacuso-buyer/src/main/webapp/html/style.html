@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>着装偏好</title>
+        <meta content="yes" name="apple-mobile-web-app-capable">
+        <meta content="yes" name="apple-touch-fullscreen">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <script src="../js/rem.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+    </head>
+<body>
+  <section class="page style-page">
+    <section class="page-header">
+        <a class="nav nav-1 active" data-index='1'>风格偏好<br><em>スタイルの設定</em></a>/
+        <a class="nav nav-2" data-index='2'>版型偏好<br><em>スタイルの設定</em></a>/
+        <a class="nav nav-3" data-index='3'>颜色偏好<br><em>スタイルの設定</em></a>/
+        <a class="nav nav-4" data-index='4'>款式偏好<br><em>スタイルの設定</em></a>
+    </section>
+
+    <a class="style-box top" id="box1">
+      <h3 class="title">选择你上班时会穿着的风格（多选)</h3>
+      <section class="option-list">
+        <div class="option-item selected">
+          <img src="../images/style_img.png" alt="">
+        </div>
+        <div class="option-item ">
+          <img src="../images/style_img.png" alt="">
+        </div>
+        <div class="option-item selected">
+          <img src="../images/style_img.png" alt="">
+        </div>
+        <div class="option-item selected">
+          <img src="../images/style_img.png" alt="">
+        </div>
+      </section>
+    </a>
+
+    <section class="style-box">
+      <h3 class="title">选择你休闲时会穿着的风格（多选)</h3>
+      <section class="option-list">
+        <div class="option-item selected">
+          <img src="../images/style_img.png" alt="">
+        </div>
+        <div class="option-item">
+          <img src="../images/style_img.png" alt="">
+        </div>
+        <div class="option-item">
+          <img src="../images/style_img.png" alt="">
+        </div>
+        <div class="option-item">
+          <img src="../images/style_img.png" alt="">
+        </div>
+      </section>
+    </section>
+
+    <a class="style-box square" id="box2">
+      <h3 class="title">选择你的版型偏好</h3>
+      <div class="sub-title"><span>衬衫</span></div>
+      <!-- square 切换代表是否图片展示方式为方形状 -->
+      <section class="option-list" data-type="single">
+        <div class="option-item">
+          <img src="../images/category_img_slim.png" alt="">
+          <p>修身</p>
+        </div>
+        <div class="option-item selected">
+          <img src="../images/category_img_fit.png" alt="">
+          <p>合适</p>
+        </div>
+        <div class="option-item">
+          <img src="../images/category_img_kuansong.png" alt="">
+          <p>宽松</p>
+        </div>
+      </section>
+      <div class="sub-title"><span>长裤</span></div>
+      <section class="option-list square" data-type="single">
+        <div class="option-item" >
+          <img src="../images/category_img_trousers_fit.png" alt="">
+          <p>修身</p>
+        </div>
+        <div class="option-item selected">
+          <img src="../images/category_img_trousers_slim.png" alt="">
+          <p>合适</p>
+        </div>
+        <div class="option-item">
+          <img src="../images/category_img_trousers_kuansong.png" alt="">
+          <p>宽松</p>
+        </div>
+      </section>
+    </a>
+
+    <!-- 颜色选择 -->
+    <a class="color-box" id="box3">
+      <h3 class="title">选择你日常穿着的颜色偏好（多选）</h3>
+      <div class="sub-titles">
+        <div class="sub-title">颜色</div>
+        <div class="sub-title">会穿</div>
+        <div class="sub-title">可以尝试</div>
+        <div class="sub-title">不穿</div>
+      </div>
+      <section class="option-list">
+        <div class="option-item">
+          <div class="base-box black">黑色</div>
+          <div class="base-box select-box selected"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box grey">灰色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box zangqing">藏青色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box blue">蓝色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box zongse">棕色</div>
+          <div class="base-box select-box selected"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box jiuhong">酒红色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box selected"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box kaqi">卡其色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box junlv">军绿色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box green">绿色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box light-blue">淡蓝色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box white">白色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box yellow">黄色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box pink">粉色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+
+        <div class="option-item">
+          <div class="base-box zise">紫色</div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+          <div class="base-box select-box"></div>
+        </div>
+      </section>
+    </a>
+
+    <!-- 不喜欢类型 -->
+    <a class="style-box unlike-box" id="box4">
+      <h3 class="title">选择你日常不穿的，款式或图案（多选）</h3>
+      <!-- square 切换代表是否图片展示方式为方形状 -->
+      <section class="option-list">
+        <div class="option-item selected">
+          <img src="" alt="">
+          <p>修身</p>
+        </div>
+
+        <div class="option-item selected">
+          <img src="../images/style_img.png" alt="">
+          <p>合适</p>
+        </div>
+
+        <div class="option-item">
+          <img src="../images/style_img.png" alt="">
+          <p>宽松</p>
+        </div>
+
+        <div class="option-item selected">
+          <img src="../images/style_img.png" alt="">
+          <p>合适</p>
+        </div>
+
+        <div class="option-item">
+          <img src="../images/style_img.png" alt="">
+          <p>宽松</p>
+        </div>
+      </section>
+    </a>
+
+    <section class="next-btn">保存</section>
+  </section>
+  <div class="toast"></div>
+  <script src="../js/zepto.js"></script>
+  <script src="../js/style.js"></script>
+</body>
+</html>

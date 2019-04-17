@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.UserInfoMapper">
+
+
+
+    <insert id="createUserInfo">
+        insert into tacuso_user_info (uid,wx_uid,nickname,industy,position,birthday) VALUES
+          (#{userInfo.uid},#{userInfo.wx_uid},#{userInfo.nickname},#{userInfo.industy},#{userInfo.position},#{userInfo.birthday})
+    </insert>
+    <update id="updateUserInfo">
+        UPDATE tacuso_user_info  SET  wx_uid =#{userInfo.wx_uid}  , nickname= #{userInfo.nickname},industy= #{userInfo.industy}, position= #{userInfo.position},birthday=#{userInfo.birthday}  WHERE uid=#{userInfo.uid}
+    </update>
+
+
+    <insert id="insertFullShot">
+        INSERT INTO tacuso_user_info ( fullbody_shot , uid, wx_uid ) VALUES (#{fullbody_shot},#{uid},#{wx_uid})
+    </insert>
+
+
+    <update id="updateFullShot">
+        UPDATE tacuso_user_info SET fullbody_shot=#{fullbody_shot} WHERE uid=#{uid}
+    </update>
+
+
+    <select id="selectUserInfoByUid" resultType="com.tacuso.buyer.entity.UserInfo">
+        select * from tacuso_user_info WHERE uid=#{uid}
+    </select>
+    
+     <select id="updateUserData" >
+         call update_user_data(#{uid});
+    </select>
+
+</mapper>

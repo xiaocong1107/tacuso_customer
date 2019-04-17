@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.FigureInfoMapper">
+    <insert id="createFigureInfo">
+        INSERT INTO tacuso_figure_info
+
+        <trim  prefix="(" suffix=")" suffixOverrides="," >
+            <if test="figureInfo.info_id!=null">info_id,</if>
+            <if test="figureInfo.uid!=null">uid,</if>
+            <if test="figureInfo.wx_uid!=null">wx_uid,</if>
+            <if test="figureInfo.height!=null">height,</if>
+            <if test="figureInfo.weight!=null">weight,</if>
+            <if test="figureInfo.tshirt_size!=null">tshirt_size,</if>
+            <if test="figureInfo.shirt_size!=null">shirt_size,</if>
+            <if test="figureInfo.trousers_size!=null">trousers_size,</if>
+            <if test="figureInfo.shoulder_size!=null">shoulder_size</if>
+            <if test="figureInfo.sleeve_length!=null">sleeve_length,</if>
+            <if test="figureInfo.bust!=null">bust,</if>
+            <if test="figureInfo.waistline!=null">waistline,</if>
+            <if test="figureInfo.hips!=null">hips,</if>
+            <if test="figureInfo.thigh_size!=null">thigh_size,</if>
+            <if test="figureInfo.leg_size!=null">leg_size,</if>
+            <if test="figureInfo.pants_length!=null">pants_length,</if>
+            <if test="figureInfo.body_type!=null">body_type</if>
+
+
+        </trim>
+
+        VALUES
+
+        <trim  prefix="(" suffix=")" suffixOverrides="," >
+            <if test="figureInfo.info_id!=null">#{figureInfo.info_id},</if>
+            <if test="figureInfo.uid!=null">#{figureInfo.uid},</if>
+            <if test="figureInfo.wx_uid!=null">#{figureInfo.wx_uid},</if>
+            <if test="figureInfo.height!=null">#{figureInfo.height},</if>
+            <if test="figureInfo.weight!=null">#{figureInfo.weight},</if>
+            <if test="figureInfo.tshirt_size!=null">#{figureInfo.tshirt_size},</if>
+            <if test="figureInfo.shirt_size!=null">#{figureInfo.shirt_size},</if>
+            <if test="figureInfo.trousers_size!=null">#{figureInfo.trousers_size},</if>
+            <if test="figureInfo.shoulder_size!=null">#{figureInfo.shoulder_size}</if>
+            <if test="figureInfo.sleeve_length!=null">#{figureInfo.sleeve_length},</if>
+            <if test="figureInfo.bust!=null">#{figureInfo.bust},</if>
+            <if test="figureInfo.waistline!=null">#{figureInfo.waistline},</if>
+            <if test="figureInfo.hips!=null">#{figureInfo.hips},</if>
+            <if test="figureInfo.thigh_size!=null">#{figureInfo.thigh_size},</if>
+            <if test="figureInfo.leg_size!=null">#{figureInfo.leg_size},</if>
+            <if test="figureInfo.pants_length!=null">#{figureInfo.pants_length},</if>
+            <if test="figureInfo.body_type!=null">#{figureInfo.body_type}</if>
+        </trim>
+    </insert>
+
+
+    <update id="updateFigureInfo">
+        UPDATE tacuso_figure_info
+        <set>
+            <if test="figureInfo.info_id!=null">info_id=#{figureInfo.info_id},</if>
+            <if test="figureInfo.uid!=null">uid=#{figureInfo.uid},</if>
+            <if test="figureInfo.wx_uid!=null">wx_uid=#{figureInfo.wx_uid},</if>
+            <if test="figureInfo.height!=null">height=#{figureInfo.height},</if>
+            <if test="figureInfo.weight!=null">weight=#{figureInfo.weight},</if>
+            <if test="figureInfo.tshirt_size!=null">tshirt_size=#{figureInfo.tshirt_size},</if>
+            <if test="figureInfo.shirt_size!=null">shirt_size=#{figureInfo.shirt_size},</if>
+            <if test="figureInfo.trousers_size!=null">trousers_size=#{figureInfo.trousers_size},</if>
+            <if test="figureInfo.shoulder_size!=null">shoulder_size=#{figureInfo.shoulder_size},</if>
+            <if test="figureInfo.sleeve_length!=null">sleeve_length=#{figureInfo.sleeve_length},</if>
+            <if test="figureInfo.bust!=null">bust=#{figureInfo.bust},</if>
+            <if test="figureInfo.waistline!=null">waistline=#{figureInfo.waistline},</if>
+            <if test="figureInfo.hips!=null">hips=#{figureInfo.hips},</if>
+            <if test="figureInfo.thigh_size!=null">thigh_size=#{figureInfo.thigh_size},</if>
+            <if test="figureInfo.leg_size!=null">leg_size=#{figureInfo.leg_size},</if>
+            <if test="figureInfo.pants_length!=null">pants_length=#{figureInfo.pants_length},</if>
+            <if test="figureInfo.body_type!=null">body_type=#{figureInfo.body_type}</if>
+        </set>
+        where uid = #{figureInfo.uid}
+    </update>
+    <select id="selectFigureInfoByUid" resultType="com.tacuso.buyer.entity.FigureInfo">
+        select * from tacuso_figure_info where uid = #{uid};
+    </select>
+</mapper>

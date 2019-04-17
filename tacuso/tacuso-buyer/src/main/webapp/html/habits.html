@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>消费习惯</title>
+        <meta content="yes" name="apple-mobile-web-app-capable">
+        <meta content="yes" name="apple-touch-fullscreen">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <script src="../js/rem.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/habits.css">
+    </head>
+<body>
+  <section class="page habit-page">
+    <section class="page-header">
+        <a class="nav nav-1 active" data-index="1">消费预算<br><em>購入された予算</em></a>/
+        <a class="nav nav-2" data-index="2">消费习惯<br><em>購入された予算</em></a>
+    </section>
+
+    <section class="habit-box" id="box1">
+      <h3 class="title">请选择在一下单品中，你的消费预算是？</h3>
+        <section class="evaluation-box">
+        <section class="evaluation-item">
+          <div class="about">T恤</div>
+          <!-- 点击选中时添加 on -->
+          <div class="range-list">
+            <div class="range-item selected">¥50-100</div>
+            <div class="range-item">¥100-200</div>
+            <div class="range-item">>¥300</div>
+          </div>
+        </section>
+
+        <section class="evaluation-item">
+          <div class="about">衬衫</div>
+          <div class="range-list">
+            <div class="range-item">¥100-300</div>
+            <div class="range-item">¥300-500</div>
+            <div class="range-item">>¥500</div>
+          </div>
+        </section>
+
+        <section class="evaluation-item">
+          <div class="about">外套</div>
+          <div class="range-list">
+            <div class="range-item ">¥200-500</div>
+            <div class="range-item">¥500-800</div>
+            <div class="range-item">>¥800</div>
+          </div>
+        </section>
+
+        <section class="evaluation-item">
+          <div class="about">长裤</div>
+          <div class="range-list">
+            <div class="range-item">¥150-300</div>
+            <div class="range-item">¥300-500</div>
+            <div class="range-item">>¥500</div>
+          </div>
+        </section>
+      </section>
+    </section>
+
+    <section class="habit-box">
+      <h3 class="title">以下有你比较喜欢的品牌吗？（多选）</h3>
+      <section class="option-list">
+        <div class="option-item selected">优衣库</div>
+        <div class="option-item">无印良品</div>
+        <div class="option-item">ZARA</div>
+        <div class="option-item">H&M</div>
+        <div class="option-item">A&F</div>
+        <div class="option-item">不熟悉服装品牌</div>
+      </section>
+    </section>
+
+    <section class="extend-input">
+      <input type="text" placeholder="可以告诉我们是哪个品牌码？(选填)">
+    </section>
+
+     <section class="habit-box" id="box2">
+      <h3 class="title">你对服饰品牌的态度是？</h3>
+      <section class="option-list" data-type="single">
+        <div class="option-item">更看重品牌知名度</div>
+        <div class="option-item">更看重款式与品质</div>
+      </section>
+    </section>
+
+     <section class="habit-box">
+      <h3 class="title">日常买衣服的主要方式是？</h3>
+      <section class="option-list" data-type="single">
+        <div class="option-item">线上电商平台</div>
+        <div class="option-item">线下商店</div>
+        <div class="option-item">家人帮忙购买</div>
+      </section>
+    </section>
+    
+    <section class="next-btn">保存</section>
+  </section>
+  <div class="toast"></div>
+  <script src="../js/zepto.js"></script>
+  <script src="../js/habits.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.WxUserMapper">
+    
+    <resultMap id="wxUser" type="com.tacuso.admin.entity.WxUser">
+        <result column="wx_uid" property="wx_uid"/>
+        <result column="wx_openid" property="wx_openid"/>
+        <result column="wx_nickname" property="wx_nickname"/>
+        <result column="wx_sex" property="wx_sex"/>
+        <result column="wx_city" property="wx_city"/>
+        <result column="wx_province" property="wx_province"/>
+        <result column="wx_country" property="wx_country"/>
+        <result column="wx_headimgurl" property="wx_headimgurl"/>
+        <result column="wx_unionid" property="wx_unionid"/>
+    </resultMap>
+
+    <!--
+    模拟数据
+    insert into tacuso_wx_user (wx_openid) values ('123123'),('123123'),('123123'),('123123'),('123123'),('123123'),('123123'),('123123'),('123123');
+    -->
+
+    <sql id="baseColumn">
+         wx_uid,wx_openid,wx_nickname,wx_sex,wx_city,wx_province,wx_country,wx_headimgurl,wx_unionid
+    </sql>
+
+
+    <select id="queryWxUserList" resultType="com.tacuso.admin.entity.WxUser">
+       select <include refid="baseColumn"/> from tacuso_wx_user
+       <where>
+           <if test="wxUser.wx_nickname != null and wxUser.wx_nickname!= '' ">
+               and wx_nickname like '%${wxUser.wx_nickname}%'
+           </if>
+       </where>
+    </select>
+
+
+    <select id="getWxUserCount" resultType="java.lang.Integer">
+        select COUNT(1) from tacuso_wx_user
+        <where>
+            <if test="wxUser.wx_nickname!=null AND wxUser.wx_nickname!=''">
+                and wx_nickname like '%${wxUser.wx_nickname}%'
+            </if>
+        </where>
+    </select>
+
+
+
+</mapper>

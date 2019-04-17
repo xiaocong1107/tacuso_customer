@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.QuestionMapper">
+
+    <insert id="add_question">
+
+        insert into tacuso_question (page_id,question_title,title_hidden,question_type,show_label,label,sort) values
+        (
+            #{question.page_id},
+            #{question.question_title},
+            #{question.title_hidden},
+            #{question.question_type},
+            #{question.show_label},
+            #{question.label},
+            #{question.sort}
+        )
+
+    </insert>
+
+    <update id="edit_question">
+
+        update tacuso_question
+        set
+        question_title = #{question.question_title},
+        title_hidden = #{question.title_hidden},
+        question_type = #{question.question_type},
+        show_label = #{question.show_label},
+        label = #{question.label},
+        sort = #{question.sort}
+        where page_id = #{question.page_id}
+        and question_id = #{question_id}
+    </update>
+    <update id="update_question_sort">
+        update tacuso_question
+        set
+          sort = #{sort}
+        where question_id = #{question_id}
+    </update>
+
+    <delete id="delete_question">
+        delete from tacuso_question where question_id = #{question_id}
+    </delete>
+
+    <select id="getAllQuestion" resultType="com.tacuso.admin.vo.QuestionVo">
+
+        select * from tacuso_question where page_id = #{page_id} order by sort desc;
+
+    </select>
+
+    <select id="getQuestionById" resultType="com.tacuso.admin.vo.QuestionVo">
+
+        select * from tacuso_question where question_id = #{question_id}
+
+    </select>
+</mapper>

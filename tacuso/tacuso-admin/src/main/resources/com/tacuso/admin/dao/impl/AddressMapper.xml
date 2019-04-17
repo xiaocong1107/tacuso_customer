@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.AddressMapper">
+
+
+    <!--
+    insert into tacuso_address (uid,name,phone,detail,area_code,area_id)
+    values (1,'123','123','详细地址','510683100011',555859);
+    -->
+
+    <select id="getAllAddress" resultType="com.tacuso.admin.vo.AddressAreaVo">
+
+        select address.address_id , address.uid , address.name , address.phone , address.detail ,address.area_code , address.area_id , address.remark,
+              area.merger_name,user.nickname FROM tacuso_address address JOIN tacuso_cnarea area ON address.area_id = area.id
+              JOIN tacuso_user user ON user.uid = address.uid
+              <where>
+                  <if test="address.nickname!= null and address.nickname!= '' ">
+                      and user.nickname like '%${address.nickname}%'
+                  </if>
+              </where>
+
+    </select>
+
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.WxUserMapper">
+
+
+
+
+    <select id="getWxUserByOpenId" resultType="com.tacuso.buyer.entity.WxUser">
+        select * from tacuso_wx_user where wx_openid= #{open_id}
+    </select>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.SendSmsLogMapper">
+
+
+    <!-- User 关联 wxUser 一对一关系 -->
+    <resultMap type="com.tacuso.buyer.entity.SendSmsLog" id="userMap">
+
+        <result property="id" column="id" />
+        <result property="phone" column="phone" />
+        <result property="name" column="name" />
+  		<result property="remark" column="remark" />
+  		<result property="isSendSuccess" column="isSendSuccess" />
+  		<result property="createtime" column="createtime" />
+    </resultMap>
+    
+    <insert id="createSendSmsLog">
+        INSERT INTO tacuso_sms_log (phone,name,remark,isSendSuccess,createtime) 
+        VALUES
+        (#{sendSmstLog.phone},#{sendSmstLog.name},#{sendSmstLog.remark},#{sendSmstLog.isSendSuccess},#{sendSmstLog.createtime});
+    </insert>
+
+
+	
+	<select id="findSendSmsLog"  resultType="com.tacuso.buyer.entity.SendWechatLog">
+		select  * from tacuso_send_wechat_log  
+		where uid=#{SendWechatLog.uid} and type=#{SendWechatLog.type}
+	</select>
+	
+	
+</mapper>

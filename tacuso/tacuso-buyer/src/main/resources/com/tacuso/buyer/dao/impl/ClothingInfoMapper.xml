@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.ClothingInfoMapper">
+    <insert id="createClothingInfo">
+        INSERT INTO tacuso_clothing_info
+        <trim  prefix="(" suffix=")" suffixOverrides="," >
+            <if test="clothingInfo.info_id!=null">info_id,</if>
+            <if test="clothingInfo.uid!=null">uid,</if>
+            <if test="clothingInfo.wx_uid!=null">wx_uid,</if>
+            <if test="clothingInfo.is_recommend!=null">is_recommend,</if>
+            <if test="clothingInfo.work_style!=null">work_style,</if>
+            <if test="clothingInfo.life_style!=null">life_style,</if>
+            <if test="clothingInfo.Tshirt_style!=null">Tshirt_style,</if>
+            <if test="clothingInfo.shirt_style!=null">shirt_style,</if>
+            <if test="clothingInfo.trousers_style!=null">trousers_style,</if>
+            <if test="clothingInfo.color_favor!=null">color_favor,</if>
+            <if test="clothingInfo.disgust_style!=null">disgust_style</if>
+        </trim>
+        VALUES
+        <trim  prefix="(" suffix=")" suffixOverrides="," >
+            <if test="clothingInfo.info_id!=null">#{clothingInfo.info_id},</if>
+            <if test="clothingInfo.uid!=null">#{clothingInfo.uid},</if>
+            <if test="clothingInfo.wx_uid!=null">#{clothingInfo.wx_uid},</if>
+            <if test="clothingInfo.is_recommend!=null">#{clothingInfo.is_recommend},</if>
+            <if test="clothingInfo.work_style!=null">#{clothingInfo.work_style},</if>
+            <if test="clothingInfo.life_style!=null">#{clothingInfo.life_style},</if>
+            <if test="clothingInfo.Tshirt_style!=null">#{clothingInfo.Tshirt_style},</if>
+            <if test="clothingInfo.shirt_style!=null">#{clothingInfo.shirt_style},</if>
+            <if test="clothingInfo.trousers_style!=null">#{clothingInfo.trousers_style},</if>
+            <if test="clothingInfo.color_favor!=null">#{clothingInfo.color_favor},</if>
+            <if test="clothingInfo.disgust_style!=null">#{clothingInfo.disgust_style}</if>
+        </trim>
+    </insert>
+    <update id="updateClothingInfo">
+        UPDATE tacuso_clothing_info
+        <set>
+            <if test="clothingInfo.info_id!=null">info_id=#{clothingInfo.info_id},</if>
+            <if test="clothingInfo.uid!=null">uid=#{clothingInfo.uid},</if>
+            <if test="clothingInfo.wx_uid!=null">wx_uid=#{clothingInfo.wx_uid},</if>
+            <if test="clothingInfo.is_recommend!=null">is_recommend=#{clothingInfo.is_recommend},</if>
+            <if test="clothingInfo.work_style!=null">work_style=#{clothingInfo.work_style},</if>
+            <if test="clothingInfo.life_style!=null">life_style=#{clothingInfo.life_style},</if>
+            <if test="clothingInfo.Tshirt_style!=null">Tshirt_style=#{clothingInfo.Tshirt_style},</if>
+            <if test="clothingInfo.shirt_style!=null">shirt_style=#{clothingInfo.shirt_style},</if>
+            <if test="clothingInfo.trousers_style!=null">trousers_style=#{clothingInfo.trousers_style},</if>
+            <if test="clothingInfo.color_favor!=null">color_favor=#{clothingInfo.color_favor},</if>
+            <if test="clothingInfo.disgust_style!=null">disgust_style=#{clothingInfo.disgust_style}</if>
+        </set>
+        where uid = #{clothingInfo.uid}
+    </update>
+    <select id="selectClothingInfoByUid" resultType="com.tacuso.buyer.entity.ClothingInfo">
+        select * from tacuso_clothing_info WHERE uid = #{uid};
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.CustomizeTagsMapper">
+
+
+
+    <select id="getCustomizeTagsPageCount" resultType="java.lang.Integer">
+        select count(1) from tacuso_customize_tags where 1=1
+    </select>
+    <select id="queryCustomizeTagsList" resultType="com.tacuso.admin.vo.CustomizeTagsVo">
+      select tags.* ,tags_category.category_name  from tacuso_customize_tags tags
+      join tacuso_customize_tags_category tags_category on tags.tag_category_id = tags_category.tag_category_id
+      <!--limit #{offset},#{pageSize}-->
+    </select>
+    <select id="getTagsByName" resultType="com.tacuso.admin.entity.CustomizeTags">
+
+        select * from tacuso_customize_tags tags where tag_name like '%${tagsName}%'
+
+    </select>
+
+</mapper>

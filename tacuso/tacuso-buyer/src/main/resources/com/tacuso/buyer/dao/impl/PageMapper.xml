@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.PageMapper">
+    <select id="getAllPage" resultType="com.tacuso.buyer.entity.Page">
+        select * from tacuso_page WHERE page_type=2 order by sort asc;
+    </select>
+    
+        <select id="getPage" resultType="com.tacuso.buyer.entity.Page">
+        select * from tacuso_page WHERE page_type=2 and page_id=#{page_id} order by sort desc;
+    </select>
+</mapper>

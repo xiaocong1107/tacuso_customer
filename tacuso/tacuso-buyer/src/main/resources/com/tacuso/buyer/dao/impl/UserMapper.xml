@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.UserMapper">
+
+
+    <!-- User 关联 wxUser 一对一关系 -->
+    <resultMap type="com.tacuso.buyer.entity.User" id="userMap">
+
+        <result property="uid" column="uid" />
+        <result property="wx_uid" column="wx_uid" />
+        <result property="uno" column="uno" />
+        <result property="bindphone" column="bindphone" />
+        <result property="is_verify" column="is_verify" />
+        <result property="nickname" column="nickname" />
+        <result property="email" column="email" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="salt" column="salt" />
+        <result property="is_employee" column="is_employee" />
+        <result property="is_member" column="is_member" />
+        <result property="is_question_finish" column="is_question_finish" />
+        <result property="is_coupon_finish" column="is_coupon_finish" />
+        <result property="province" column="province" />
+        <result property="growth" column="growth" />
+        <result property="score" column="score" />
+        <result property="level_id" column="level_id" />
+        <result property="credit_level_id" column="credit_level_id" />
+        <association property="wxUser" javaType="com.tacuso.buyer.entity.WxUser">
+            <result property="wx_uid" column="wx_uid" />
+            <result property="wx_openid" column="wx_openid" />
+            <result property="wx_nickname" column="wx_nickname" />
+            <result property="wx_sex" column="wx_sex" />
+            <result property="wx_city" column="wx_city" />
+            <result property="wx_province" column="wx_province" />
+            <result property="wx_country" column="wx_country" />
+            <result property="wx_headimgurl" column="wx_headimgurl" />
+            <result property="wx_unionid" column="wx_unionid" />
+            <result property="wx_subscribe_scene" column="wx_subscribe_scene" />
+            <result property="wx_remark" column="wx_remark" />
+            <result property="wx_subscribe_time" column="wx_subscribe_time" />
+            <result property="wx_tagid_list" column="wx_tagid_list" />
+        </association>
+
+    </resultMap>
+    <insert id="createUser">
+        INSERT INTO tacuso_user (wx_uid,uno,bindphone,nickname,email,username,salt,password,is_member,is_verify,rt) 
+        VALUES
+        (#{user.wx_uid},#{user.uno},#{user.bindphone},#{user.nickname},#{user.email},#{user.username},#{user.salt},#{user.password},#{user.is_member},#{user.is_verify},unix_timestamp(now()));
+    </insert>
+
+
+    <!-- 用户注册 -->
+    <update id="registerUser" >
+        UPDATE tacuso_user set bindphone=#{bindphone}, is_verify=1, province=#{area},
+        <if test="inviteCode != null and inviteCode != ''">
+    	invite_code =#{inviteCode},
+    	</if>
+         register_time=now() WHERE uid = #{uid};
+    </update>
+    <update id="updateMember">
+        UPDATE tacuso_user set is_member = 1,member_time = now() WHERE uid = #{uid};
+    </update>
+    <update id="clearUserByUid">
+           UPDATE tacuso_user set is_member=0,is_verify=0,is_question_finish=0,bindphone='110' WHERE uid = #{uid};
+    </update>
+    <update id="changeBindphone">
+           UPDATE tacuso_user set bindphone=#{bindphone}, is_verify=1 WHERE uid = #{uid};
+    </update>
+    <update id="updateQuestionFinish">
+         UPDATE tacuso_user set is_question_finish = 1 WHERE uid = #{uid};
+    </update>
+    
+    <update id="updateCouponFinish">
+         UPDATE tacuso_user set growth = 1 WHERE uid = #{uid};
+    </update>
+
+    <select id="userLogin" resultType="com.tacuso.buyer.entity.User" useCache="false">
+        select * from tacuso_user where bindphone = #{bindphone}
+    </select>
+
+    <select id="getUserByBindphone" resultType="com.tacuso.buyer.entity.User">
+        SELECT * FROM tacuso_user where bindphone = #{bindphone}
+    </select>
+
+    <select id="getUserByUid" resultMap="userMap">
+       select t1.uid, t1.wx_uid, t1.uno, t1.bindphone, t1.is_verify, t1.nickname, t1.email, t1.username, t1.is_employee, 
+       t1.is_member, t1.is_question_finish, t1.is_coupon_finish, t1.province,t1.growth, t1.score, t1.level_id, t1.credit_level_id
+       from tacuso_user t1 left join tacuso_wx_user t2 ON t1.wx_uid = t2.wx_uid where t1.uid = #{uid};
+    </select>
+
+	<select id="getClothingInfoByUid" parameterType="int" resultType="map">
+		select work_style,life_style,shirt_style,trousers_style,color_favor,favorite_color,try_color,disgust_color,disgust_style
+		from tacuso_clothing_info where uid = #{uid}
+	</select>
+	
+	<update id="updateClothingInfo" parameterType="com.tacuso.buyer.entity.ClothingInfo">
+		update tacuso_clothing_info
+		set work_style = #{info.work_style},life_style = #{info.life_style},shirt_style = #{info.shirt_style},
+			trousers_style = #{info.trousers_style}, color_favor = #{info.color_favor},disgust_style = #{info.disgust_style}
+		where uid = #{info.uid}
+	</update>
+	
+	<!-- 
+	<select id="getCurrentyRegisterGroup" resultType="com.tacuso.buyer.entity.Group">
+		select * from tacuso_group where now() between register_starttime and register_endtime
+	</select>
+	
+	<select id="getNextGroupByDeliveryTime" parameterType="string" resultType="com.tacuso.buyer.entity.Group">
+		select * from tacuso_group where delivery_time > #{delivery_time} order by delivery_time limit 1
+	</select>
+	
+	<insert id="setUserGroup">
+		INSERT INTO tacuso_user_group (uid, group_id, rt)
+		SELECT #{uid} as uid, t.group_id, unix_timestamp(now()) as rt
+		FROM (
+		SELECT ROW_NUMBER() over (order by b.group_id) as row_num, b.* 
+		FROM tacuso_group a, tacuso_group b
+		WHERE a.group_id = #{group_id} AND a.group_name = b.group_name AND b.`month` >= a.`month`
+		ORDER BY b.`month`
+		) t WHERE t.row_num%2 = 1
+		LIMIT 6
+	</insert>
+	 
+	<update id="updateGroupUserNum" parameterType="int">
+		update tacuso_group set user_num = user_num + 1 where group_id = #{group_id}
+	</update>
+	
+	<select id="getUserGroupList" parameterType="int" resultType="com.tacuso.buyer.entity.Group">
+		select a.* from tacuso_group a,tacuso_user_group b
+		where a.group_id = b.group_id and b.uid = #{uid} and a.group_status in (0,1)
+		order by a.month
+	</select>
+	
+	<select id="getCurrentyGroup" parameterType="int" resultType="com.tacuso.buyer.entity.Group">
+		select a.* from tacuso_group a,tacuso_user_group b
+		where a.group_id = b.group_id and b.uid = #{uid} and a.group_status in (0,1)
+		order by a.month
+		limit 1
+	</select>
+	 -->
+	<select id="findMemberJoinUserList"  resultType="com.tacuso.buyer.entity.User">
+		select  * from tacuso_user  t1
+		where now()&gt;date_add(t1.register_time,interval 1 day) and now()&lt;date_add(t1.register_time,interval 50 day)
+		and t1.is_member=0 and t1.is_question_finish=1 and uid=115
+	</select>
+	
+	<select id="findMemberInfoCompleteList"  resultType="com.tacuso.buyer.entity.User">
+		select  * from tacuso_user  t1
+		where now()&gt;date_add(t1.member_time,interval 1 day) and now()&lt;date_add(t1.member_time,interval 50 day)
+		and t1.is_member=1 and t1.growth=0 and uid=115
+	</select>
+	
+	<!-- 获取序列号 -->
+    <select id="getUserNo" parameterType="string" resultType="string" statementType="CALLABLE"> 
+       SELECT NEXTVAL('uno')
+    </select>
+    
+    <select id="updateUserData" parameterType="int"  statementType="CALLABLE">
+			call update_user_data(#{uid});
+	</select>
+	
+   	<select id="getIndexUser"  parameterType="int" resultType="pd">
+			select  t2.nickname as name,t1.uno,t1.is_member,t3.wx_headimgurl as headimgurl
+			from tacuso_user  t1
+			left join  tacuso_user_info t2 on t1.uid=t2.uid
+			left join tacuso_wx_user t3 on t1.wx_uid=t3.wx_uid
+			where  t1.uid=#{uid}
+	</select>
+	
+	
+	<select id="getHeadImg"  parameterType="int" resultType="String">
+			select  t3.wx_headimgurl as headimgurl
+			from tacuso_user  t1
+			left join tacuso_wx_user t3 on t1.wx_uid=t3.wx_uid
+			where  t1.uid=#{uid}
+	</select>
+
+	  <select id="validateInviteCode"  parameterType="String" resultType="pd">
+			select  *
+			from tacuso_invite_code where  invite_code=#{inviteCode} and status=1
+	</select>
+	
+	
+	<select id="getUserByShopCode"   resultType="pd">
+		  select *from  tacuso_user t1, tacuso_shop t2 where t1.invite_code=t2.invite_code
+ 		  and t2.shop_code=#{shopCode} and uid=#{uid}
+	</select>
+	
+</mapper>

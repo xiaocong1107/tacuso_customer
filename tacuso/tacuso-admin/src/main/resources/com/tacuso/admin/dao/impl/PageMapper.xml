@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.PageMapper">
+
+
+    <insert id="createPage" >
+        INSERT INTO tacuso_page (page_name,sort,rt,ut) VALUES (#{page.page_name},#{page.sort},unix_timestamp(),unix_timestamp())
+    </insert>
+
+    <update id="updatePageInfo">
+        UPDATE tacuso_page set page_name = #{page.page_name} , sort=  #{page.sort} , ut = unix_timestamp()
+        WHERE page_id = #{page_id}
+    </update>
+
+    <delete id="deletePage">
+        DELETE FROM tacuso_page WHERE  page_id = #{page_id}
+    </delete>
+
+    <select id="getPageById" resultType="com.tacuso.admin.entity.Page">
+
+        SELECT * FROM tacuso_page WHERE page_id = #{page_id}
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.admin.dao.UserCustomizeTagsMapper">
+
+
+    <!--
+     插入测试数据
+     insert into  tacuso_user_customize_tags  (tag_id , tag_value , uid , wx_uid ) values ('2','12312312','2','2');
+    -->
+
+    <sql id="userCustomizerTags">
+
+
+    </sql>
+
+
+    <select id="getUserCustomizeTagsCount" resultType="java.lang.Integer">
+
+        select count(1) from tacuso_user_customize_tags
+        <include refid="userCustomizerTags">
+            <property name="tableName" value="tacuso_user_customize_tags"/>
+        </include>
+
+    </select>
+
+    <select id="getAllUserCustomizeTags" resultType="com.tacuso.admin.vo.UserCustomizeTagsVo">
+
+        select user_tags.* , tags.tag_name, tags.tag_category_id ,tags.tag_key ,user.nickname ,user.email  from tacuso_user_customize_tags user_tags JOIN tacuso_customize_tags tags on user_tags.tag_id = tags.tag_id
+        JOIN tacuso_user user on user_tags.uid = user.uid
+        <include refid="userCustomizerTags" >  <property name="tableName" value="user_tags"/></include>
+        limit #{offset},#{pageSize}
+    </select>
+
+
+</mapper>

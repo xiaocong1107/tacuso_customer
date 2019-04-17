@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.OrderMapper">
+	
+	<resultMap type="com.tacuso.buyer.vo.PayOrderVo" id="payOrderMap">
+		<id property="order_no" column="order_no"/>
+        <result property="uid" column="uid" />
+        <result property="total_amount" column="total_amount" />
+        <result property="discount_amount" column="discount_amount" />
+        <result property="voucher_amount" column="voucher_amount" />
+        <result property="pay_amount" column="pay_amount" />
+        <result property="pay_status" column="pay_status" />
+        <result property="trade_no" column="trade_no" />
+        <result property="pay_time" column="pay_time" />
+        <result property="buyer_msg" column="buyer_msg" />
+        <result property="consignee" column="consignee" />
+        <result property="phone" column="phone" />
+        <result property="city" column="city" />
+        <result property="address" column="address" />
+        <result property="remark" column="remark" />
+        <result property="express_no" column="express_no" />
+        <collection property="detailList" javaType="java.util.ArrayList" ofType="com.tacuso.buyer.entity.PayOrderDetail">
+           	<result property="order_no" column="order_no"/>
+            <result property="serial_num" column="serial_num" />
+            <result property="spu_id" column="spu_id" />
+            <result property="sku_id" column="sku_id" />
+            <result property="sku_name" column="sku_name" />
+            <result property="sku_pic" column="sku_pic" />
+            <result property="sku_price" column="sku_price" />
+        </collection>
+    </resultMap>
+    
+	<select id="getLastOrder" parameterType="int" resultType="com.tacuso.buyer.entity.Order">
+		select * from tacuso_order where uid = #{uid} and order_status in (0,1,2,21,3,4,5,6) 
+		order by gmt_create desc limit 1
+	</select>
+	
+	<select id="getOrderByOrderNo" parameterType="string" resultType="com.tacuso.buyer.entity.Order">
+		select * from tacuso_order where order_no = #{order_no}
+	</select>
+	
+	<select id="findOrderDetailListByOrderNo" parameterType="string" resultType="com.tacuso.buyer.entity.OrderDetail">
+	  	select t1.order_detail_id,t1.order_no,t1.serial_num,t1.sku_name,
+		t1.sku_price,t1.is_buy,t1.comment,t1.content,t2.brand,t2.pic_url as sku_pic
+		from tacuso_order_detail t1
+		left join tacuso_sku t2 on t1.sku_id=t2.sku_id
+		where t1.order_no = #{order_no}
+	</select>
+	
+	<select id="findOrderDetailByOrderNoAndNum" parameterType="map" resultType="com.tacuso.buyer.entity.OrderDetail">
+		select * from tacuso_order_detail where order_no = #{order_no} AND serial_num = #{serial_num}
+	</select>
+	
+	<insert id="saveMemberPayOrder">
+		INSERT INTO tacuso_member_pay_order 
+		(uid, order_id, product, total_fee, trade_no, is_pay, rt, is_member, type, pay_openId)
+        VALUES 
+        (#{order.uid},#{order.order_id},#{order.product},#{order.total_fee},#{order.trade_no},#{order.is_pay},#{order.rt},#{order.is_member},#{order.type},#{order.pay_openId});
+	</insert>
+	
+	<select id="getMemberPayOrderByOrderId" parameterType="string" resultType="com.tacuso.buyer.entity.MemberPayOrder">
+		select * from tacuso_member_pay_order where order_id = #{order_id}
+	</select>
+	
+	<select id="getMemberPayOrderByOrderNo" parameterType="string" resultType="com.tacuso.buyer.entity.MemberPayOrder">
+		select * from tacuso_member_pay_order where order_no = #{orderNo}
+	</select>
+	
+	<update id="updateMemberPayOrder" parameterType="com.tacuso.buyer.entity.MemberPayOrder">
+		update tacuso_member_pay_order 
+		set 
+		<if test="order.trade_no != null and order.trade_no != ''">
+				trade_no = #{order.trade_no},
+		</if>
+		<if test="order.is_pay != null and order.is_pay != ''">
+				is_pay = #{order.is_pay}, 
+		</if>
+		<if test="order.pay_time != null and order.pay_time != ''">
+				pay_time = #{order.pay_time},
+		</if>
+		<if test="order.order_no!= null and order.order_no != ''">
+				order_no = #{order.order_no},
+		</if>
+		<if test="order.type != null and order.type != ''">
+				type = #{order.type},
+		</if>
+		order_id = order_id 
+		where order_id = #{order.order_id}
+	</update>
+	
+	<update id="updateOrderDetail" parameterType="map">
+		update tacuso_order_detail set is_buy = #{is_buy}, comment = #{comment} , content = #{content} 
+		where order_no = #{order_no} and serial_num = #{serial_num}
+	</update>
+	
+	<select id="getOrderTotalAmount" parameterType="string" resultType="bigDecimal">
+		select SUM(sku_price) from tacuso_order_detail where order_no = #{order_no} and is_buy = 1
+	</select>
+	
+	<insert id="savePayOrder" parameterType="com.tacuso.buyer.entity.PayOrder">
+		INSERT INTO tacuso_pay_order 
+		(uid,shop_code, pay_order_no, order_no, total_amount, discount_amount, voucher_amount, voucher_id, pay_amount, pay_status, buyer_msg,
+			consignee, phone, city, address, rt, platform_amount, shop_amount, freight, freight_id, service_amount)
+        VALUES 
+        (#{order.uid}, #{order.shop_code}, #{order.pay_order_no}, #{order.order_no}, #{order.total_amount}, #{order.discount_amount}, #{order.voucher_amount},
+        	#{order.voucher_id}, #{order.pay_amount}, #{order.pay_status}, #{order.buyer_msg}, #{order.consignee}, 
+        	#{order.phone}, #{order.city}, #{order.address}, #{order.rt}, #{order.platform_amount}, #{order.shop_amount}, #{order.freight}, #{order.freight_id}, #{order.service_amount});	
+	</insert>
+	
+	<insert id="savePayOrderDetail" parameterType="com.tacuso.buyer.entity.PayOrderDetail">
+		INSERT INTO tacuso_pay_order_detail
+		(pay_order_no, serial_num, spu_id, sku_id, sku_name, sku_pic, sku_price, rt)
+        VALUES 
+        (#{detail.pay_order_no}, #{detail.serial_num}, #{detail.spu_id}, #{detail.sku_id}, #{detail.sku_name}, 
+        	#{detail.sku_pic},#{detail.sku_price},#{detail.rt})
+	</insert>
+	
+	
+	<select id="getPayOrderByOrderNo" parameterType="string" resultType="com.tacuso.buyer.entity.PayOrder">
+		select * from tacuso_pay_order where order_no = #{order_no} order by pay_order_no desc limit 1
+	</select>
+	
+	<select id="getPayOrderByPayOrderNo" parameterType="string" resultType="com.tacuso.buyer.entity.PayOrder">
+		select * from tacuso_pay_order where pay_order_no = #{pay_order_no}
+	</select>
+	
+	<select id="findPayOrderDetailListByOrderNo" parameterType="string" resultType="com.tacuso.buyer.entity.PayOrderDetail">
+		select * from tacuso_pay_order_detail where pay_order_no = #{pay_order_no}
+	</select>
+	
+	<update id="updatePayOrder" parameterType="com.tacuso.buyer.entity.PayOrder">
+		update tacuso_pay_order
+		set trade_no = #{order.trade_no},pay_status = #{order.pay_status}, pay_time = #{order.pay_time}, freight = #{order.freight}, pay_type = #{order.pay_type}
+		where pay_order_no = #{order.pay_order_no}
+	</update>
+	
+	<select id="getHistoryPayOrderListByUid" parameterType="int" resultMap="payOrderMap">
+		select *
+		from tacuso_pay_order a
+		left join tacuso_pay_order_detail b ON a.pay_order_no = b.pay_order_no
+		where a.pay_status = 1 and a.uid = #{uid}
+	</select>
+	
+	<insert id="saveExpressLog" parameterType="map">
+		INSERT INTO tacuso_express_log 
+		(status,uid,starttime,endtime,createtime, delivery_no, name, tel, Address, remark, order_no, shop_name, shop_tel, shop_address)
+        VALUES 
+        (#{status},#{uid},#{starttime},#{endtime},#{createtime},#{TimeStsamp},#{username},#{phone},#{Address},#{remark},#{orderNo},#{shopName},#{shopPhone},#{takeAddress});
+	</insert>
+	
+	<update id="updateOrderExpressstatus">
+		update tacuso_order 
+		set order_status = 6,expresstime=now()
+		where order_no = #{orderNo} and order_status in (5,6)
+	</update>
+	
+	
+	<insert id="saveOrderInfo">
+		INSERT INTO tacuso_order_info 
+		(uid, orderNo, style, addtime)
+        VALUES 
+        (#{orderInfo.uid},#{orderInfo.orderNo},#{orderInfo.style},#{orderInfo.addtime});
+	</insert>
+	
+	<select id="findserviceExpireList"  resultType="com.tacuso.buyer.entity.Order">
+		select * from tacuso_order where 	now()&gt;date_add(FROM_UNIXTIME(rt,'%Y-%m-%d %h:%m:%s') ,interval 5 day)
+ 		and now()&lt;date_add(FROM_UNIXTIME(rt,'%Y-%m-%d %h:%m:%s') ,interval 50 day)  and order_status in (4,5) and uid=115
+	</select>
+	
+	
+	<insert id="saveOrderEvaluate">
+		INSERT INTO tacuso_order_evaluate 
+		(uid, order_no, style, service,content, createtime,shop_code)
+        VALUES 
+        (#{uid},#{orderNo},#{style},#{service},#{content},#{createtime},#{shop_code});
+	</insert>
+	
+	
+	<update id="updateOrderEvaluate">
+		update tacuso_order_evaluate 
+		set style = #{style}  , service = #{service} , content = #{content}
+		where order_no = #{order_no}  
+	</update>
+	
+	<select id="getYuyueTime" parameterType="int" resultType="string">
+	 		select CONCAT( DATE_FORMAT(starttime,'%m月%d日 %H:%i') , '~',DATE_FORMAT(endtime,'%H:%i'))  as yuyueTime
+			from tacuso_express_log where uid = #{uid} and status=0 order by id desc limit 1
+	</select>
+	
+		<!-- 获取序列号 -->
+    <select id="getOrderNo" parameterType="string" resultType="int" statementType="CALLABLE"> 
+       SELECT NEXTVAL('orderNo')
+    </select>
+	
+	  <insert id="createOrder">
+        INSERT INTO tacuso_order (order_no,uid,order_status,begintime,address_id,consignee,phone,city,address,buyer_msg,freight_id,if_want,deposit_status) 
+        VALUES
+        (#{order.order_no},#{order.uid},#{order.order_status},#{order.begintime},#{order.address_id},#{order.consignee},#{order.phone},#{order.city},#{order.address},#{order.buyer_msg},#{order.freight_id},#{order.if_want},0);
+    </insert>
+    
+    <select id="getOrderInfo" parameterType="string" resultType="com.tacuso.buyer.entity.OrderInfo">
+		select * from tacuso_order_info where orderNo = #{order_no}
+	</select>
+	
+	
+	<update id="updateSignStatus" parameterType="com.tacuso.buyer.entity.MemberPayOrder">
+		update tacuso_order 
+		set order_status = 4, signtime = now()
+		where order_no = #{order_no}  and   order_status = 3
+	</update>
+	
+	<select id="getFreightPrice" parameterType="string" resultType="string">
+			select 
+			ifnull(t5.deliverPrice+t5.backPrice,0) as freightPrice
+			from
+			(
+		  	select case when t4.buyCount=0 then t4.deliver_price else 0 end as deliverPrice,
+			case when t4.buyCount=4 then 0 else t4.back_price end as backPrice
+			from 
+		  	(		
+					 	select ifnull(t2.buyCount,0) as buyCount,t3.deliver_price,t3.back_price from
+			 			(select *from tacuso_pay_order where pay_order_no=#{order_no})t1 
+			 			left join (select count(*) as buyCount,pay_order_no from tacuso_pay_order_detail where pay_order_no=#{order_no} )t2
+			 			on t1.pay_order_no=t2.pay_order_no
+			 			left join tacuso_shop_freight t3 on t1.freight_id=t3.freight_id
+			   )t4
+			)t5
+	</select>
+	
+	
+	  <select id="getAllFreightPrice"   resultType="string">
+		select sum(deliver_price+back_price) as totalPrice from tacuso_shop_freight  where freight_id=1
+	  </select>
+	
+	 <select id="callInsertShopAccounts"   statementType="CALLABLE">
+			call insert_shop_accounts();
+	</select>
+	
+	<select id="callUpdateShopAccounts"   statementType="CALLABLE">
+			call update_shop_accounts();
+	</select>
+	
+	<select id="getHistoryOrderList" parameterType="pd" resultType="pd">
+			 select  t1.order_no as orderNo,
+			 ifnull(t3.pay_amount,FORMAT(0,0)) as payAmount,t5.shop_name as shopName,
+			 Max(case when (t2.sku_pic1!='') then concat(t2.sku_pic1,'?x-oss-process=image/resize,m_fixed,h_100,w_100') else 'https://tacuso.oss-cn-shenzhen.aliyuncs.com/goods/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190104113527.jpg?x-oss-process=image/resize,m_fixed,h_100,w_100' end) as sku_pic1,
+			 Max(case when (t2.sku_pic2!='') then concat(t2.sku_pic2,'?x-oss-process=image/resize,m_fixed,h_100,w_100') else 'https://tacuso.oss-cn-shenzhen.aliyuncs.com/goods/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190104113527.jpg?x-oss-process=image/resize,m_fixed,h_100,w_100' end) as sku_pic2,
+			 Max(case when (t2.sku_pic3!='') then concat(t2.sku_pic3,'?x-oss-process=image/resize,m_fixed,h_100,w_100') else 'https://tacuso.oss-cn-shenzhen.aliyuncs.com/goods/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190104113527.jpg?x-oss-process=image/resize,m_fixed,h_100,w_100' end) as sku_pic3,
+			 Max(case when (t2.sku_pic4!='') then concat(t2.sku_pic4,'?x-oss-process=image/resize,m_fixed,h_100,w_100') else 'https://tacuso.oss-cn-shenzhen.aliyuncs.com/goods/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190104113527.jpg?x-oss-process=image/resize,m_fixed,h_100,w_100' end) as sku_pic4
+			 from tacuso_order t1
+			 left join
+				(select Max(case when td.serial_num = 1  then  ts.pic_url else '' end) as sku_pic1,
+					Max(case when td.serial_num = 2 then  ts.pic_url else '' end) as sku_pic2,
+					Max(case when td.serial_num = 3 then  ts.pic_url else '' end) as sku_pic3,
+					Max(case when td.serial_num = 4 then  ts.pic_url else '' end) as sku_pic4,
+					ts.sku_id, td.order_no from tacuso_order o,tacuso_order_detail td ,tacuso_sku ts 
+					where td.sku_id=ts.sku_id and o.order_no=td.order_no and o.uid=#{uid}
+				  group by  td.order_no
+			  )t2 
+			 on t1.order_no=t2.order_no 
+			 left join tacuso_pay_order t3 on  t1.order_no=t3.order_no 
+			 left join tacuso_user t4 on  t1.uid=t4.uid 
+			 left join tacuso_shop t5 on t1.shop_code=t5.shop_code
+			 where t1.uid=#{uid} and t1.order_status=7
+			 GROUP BY t1.order_no  order by t1.finishtime desc  limit #{page},10
+	</select>
+	
+	
+		<select id="getHistoryOrderCount" parameterType="int" resultType="int">
+	 		select count(*) from 
+	 		tacuso_order
+			where uid=#{uid}
+			and order_status=7
+	</select>
+	
+	<select id="getHistoryOrderInfo" parameterType="pd" resultType="pd">
+		  select 
+		  case when t4.id is null then 0 else 1 end as evaluate_status,t1.order_status,
+		  t5.shop_name as shopName,t6.total_amount as totalAmount,t6.discount_amount as discountAmount,
+		  ifnull(t6.service_amount,0) as serviceAmount,
+		  t6.pay_amount as payAmount,t1.order_no as orderNo,t1.begintime,
+		  case when t3.is_member=0 then '单次服务' when t3.is_member=1 then '会员免押订单' else '到店消费'  end as orderType,
+		  case when t3.is_member=0 then 19 when t3.is_member=1 then 0 else 0  end as servicePirce,
+		  case when t3.is_member=0 then 90 when t3.is_member=1 then 0 else 0  end as depositPirce,
+		  case when t3.is_member=0 then '已退还' when t3.is_member=1 then '已抵扣会员年费' else '已冻结'  end as depositType
+    	  from   tacuso_order  t1
+    	  left join tacuso_order_info t2 on t1.order_no=t2.orderNo 
+    	  left join tacuso_user t3 on t1.uid=t3.uid
+    	  left join tacuso_order_evaluate t4 on t1.order_no=t4.order_no
+    	  left join tacuso_shop t5 on t1.shop_code=t5.shop_code
+    	  left join  tacuso_pay_order t6 on t1.order_no=t6.order_no 
+    	  where
+    	  t1.order_no= #{orderNo} and t1.uid =#{uid} and t1.order_status=7 and t6.pay_status=1 limit 1
+	</select>
+	
+	<select id="getHistoryOrderDetailList" parameterType="pd" resultType="pd">
+		    select t1.serial_num as serial_Num,t1.sku_name as skuName,
+    		case when (t2.pic_url!='' or t2.pic_url!=null) then t2.pic_url else 'https://tacuso.oss-cn-shenzhen.aliyuncs.com/goods/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190104113527.jpg?x-oss-process=image/resize,m_fixed,h_100,w_100' end as skuPic,
+    		t1.sku_price as skuPrice,t1.order_detail_id as detailId,t2.brand,t1.size,
+    		case when t1.is_buy=2 then '退回' when t1.is_buy=1 then '买了' else '未交易'  end goodsStatus
+    		FROM tacuso_order_detail t1 
+    		left join tacuso_sku t2 on t1.sku_id=t2.sku_id
+    		 where  t1.order_no =  #{orderNo}
+	</select>
+	
+	<select id="getBeginOrderInfoByUid"  resultType="pd">
+		 	 select t1.order_no as orderNo,t1.begintime,t1.order_status,
+    		 case when t1.order_status in (0,1) then '已下单' when t1.order_status in (2,21) then '搭配中' 
+			 when t1.order_status=3 then '已发货' when t1.order_status=4 then '已签收' 
+			 when t1.order_status=5 then '等待商品寄回' when t1.order_status=6 then '商品寄回中' when t1.order_status=7 then '订单完成' else ''  end as statusTitle,
+			 case when t1.order_status in (2,21) then '商家已接单' 
+			 when t1.order_status=3 then '商家已发货' when t1.order_status=4 then '商家已发货'  else '没有'  end as shopTitle,
+			 case when t2.is_member=0 then '单次服务' when t2.is_member=1 then '会员免押服务' else '到店消费'  end as orderType,
+			 case when t2.is_member=0 then 19 when t2.is_member=1 then 0 else 0  end as servicePirce,
+			 case when t2.is_member=0 then 90 when t2.is_member=1 then 0 else 0  end as depositPirce,
+			 concat(t1.consignee,',',t1.phone,',',REPLACE(t1.city,'/',''),t1.address) as addressInfo, 
+			 t3.shop_name as shopName,	 concat(t4.main_style,'·',t4.minor_style) as shopStyle,UNIX_TIMESTAMP(now()) as signBtime,UNIX_TIMESTAMP(date_add(signtime, interval 3 day)) as signEtime,
+			 case when (t1.deposit_status=0 or t1.deposit_status=1) then '已交付' when t1.deposit_status=2 then '已交付' else '未处理'  end as depositType,
+			 ifnull(t1.deposit_status,0) as depositStatus
+			  from  tacuso_order t1
+		     left join tacuso_user t2 on t1.uid=t2.uid
+		     left join tacuso_shop t3 on t1.shop_code=t3.shop_code
+		     left join  tacuso_shop_info t4 on t3.shop_code=t4.shop_code
+			 where  t1.uid=#{uid} and t1.order_status=#{orderStatus} and t1.if_want=1  order by t1.gmt_create desc limit 1
+	</select>
+	
+	
+		<select id="getPayOrderInfoByUid"  resultType="pd">
+		 	 select t1.order_no as orderNo,t1.begintime,t1.order_status,
+    		 case when t1.order_status in (0,1) then '已下单' when t1.order_status in (2,21) then '搭配中' 
+			 when t1.order_status=3 then '已发货' when t1.order_status=4 then '已签收' 
+			 when t1.order_status=5 then '等待商品寄回' when t1.order_status=6 then '商品寄回中' when t1.order_status=7 then '订单完成' else ''  end as statusTitle,
+			 case when t1.order_status in (2,21) then '商家已接单' 
+			 when t1.order_status=3 then '商家已发货' when t1.order_status=4 then '商家已发货'  else '没有'  end as shopTitle,
+			 case when t2.is_member=0 then '单次服务' when t2.is_member=1 then '会员免押服务' else '到店消费'  end as orderType,
+			 case when t2.is_member=0 then 19 when t2.is_member=1 then 0 else 0  end as servicePirce,
+			 case when t2.is_member=0 then 90 when t2.is_member=1 then 0 else 0  end as depositPirce,
+			 concat(t1.consignee,',',t1.phone,',',REPLACE(t1.city,'/',''),t1.address) as addressInfo, 
+	 		 case when (t1.deposit_status=0 or t1.deposit_status=1) then '已交付' when t1.deposit_status=2 then '已交付' else '未处理'  end as depositType,
+			 ifnull(t1.deposit_status,0) as depositStatus,
+			 case when t3.id is null then 0 else 1 end as commentStatus
+			 from  tacuso_order t1
+		     left join tacuso_user t2 on t1.uid=t2.uid
+		     left join  tacuso_order_evaluate t3 on t1.order_no=t3.order_no
+			 where  t1.uid=#{uid} and t1.order_status=#{orderStatus}  order by t1.gmt_create desc limit 1
+	</select>
+	
+	<select id="getExpressOrderInfoByUid"  resultType="pd">
+		 	 select t1.order_no as orderNo,t1.begintime,t1.order_status,
+    		 case when t1.order_status in (0,1) then '已下单' when t1.order_status in (2,21) then '搭配中' 
+			 when t1.order_status=3 then '已发货' when t1.order_status=4 then '已签收' 
+			 when t1.order_status=5 then '等待商品寄回' when t1.order_status=6 then '商品寄回中' when t1.order_status=7 then '订单完成' else ''  end as statusTitle,
+			 case when t1.order_status in (2,21) then '商家已接单' 
+			 when t1.order_status=3 then '商家已发货' when t1.order_status=4 then '商家已发货'  else '没有'  end as shopTitle,
+			 case when t2.is_member=0 then '单次服务' when t2.is_member=1 then '会员免押服务' else '到店消费'  end as orderType,
+			 case when t2.is_member=0 then 19 when t2.is_member=1 then 0 else 0  end as servicePirce,
+			 case when t2.is_member=0 then 90 when t2.is_member=1 then 0 else 0  end as depositPirce,
+			 concat(t1.consignee,',',t1.phone,',',REPLACE(t1.city,'/',''),t1.address) as addressInfo, 
+			 case when (t1.deposit_status=0 or t1.deposit_status=1) then '已交付' when t1.deposit_status=2 then '已交付' else '未处理'  end as depositType,
+			 concat(t3.name,',',t3.tel,',',t3.Address) as addressInfo,
+			 t3.starttime as ex_starttime,	t3.endtime as ex_endtime,
+			 ifnull(t1.deposit_status,0) as depositStatus,
+			 case when t4.id is null then 0 else 1 end as commentStatus
+			 from  tacuso_order t1
+		     left join tacuso_user t2 on t1.uid=t2.uid
+		     left join tacuso_express_log t3 on t1.order_no=t3.order_no
+		     left join  tacuso_order_evaluate t4 on t1.order_no=t4.order_no
+			 where  t1.uid=#{uid} and t1.order_status=#{orderStatus} and t3.status=0 order by t1.gmt_create desc limit 1
+	</select>
+	
+	
+	<update id="updateOrderInfo" parameterType="pd">
+		update tacuso_order 
+		set consignee = #{consignee},phone = #{phone},city = #{city},address = #{address}
+		where order_no = #{orderNo} 
+	</update>
+	
+	<select id="getCollocationInfo" parameterType="pd" resultType="pd">
+	 	select  collocation,content,type,order_no as orderNo from  
+		tacuso_order_collocation where order_no= #{orderNo}  and type= #{type}
+	</select>
+	
+	<select id="getOrderDetailInfo" parameterType="pd" resultType="pd">
+	 		select t1.serial_num,t2.pic_url from   tacuso_order_detail t1
+			left join tacuso_sku t2 on t1.sku_id=t2.sku_id
+			where order_no=#{orderNo} and  locate(serial_num,#{collocation}) order by  serial_num asc 
+	</select>
+	
+	<update id="updateDeposit" parameterType="pd">
+		update tacuso_order 
+		set deposit_status = #{depositStatus}
+		where order_no = #{orderNo}  and   order_status IN (5,6)
+	</update>
+	
+	<select id="getOrderExpress" parameterType="String" resultType="pd">
+	 	 	 	select DATE_FORMAT(starttime,'%Y-%m-%d') as date, 
+	 	 	 	case when DAYOFWEEK(starttime)=2 then '星期一'
+	 	 	 	      when DAYOFWEEK(starttime)=3 then '星期二'
+	 	 	 	       when DAYOFWEEK(starttime)=4 then '星期三'
+	 	 	 	        when DAYOFWEEK(starttime)=5 then '星期四'
+	 	 	 	         when DAYOFWEEK(starttime)=6 then '星期五'
+	 	 	 	          when DAYOFWEEK(starttime)=7 then '星期六'
+	 	 	 	            when DAYOFWEEK(starttime)=1 then '星期日' end as week,
+	 	 	 	            CONCAT(DATE_FORMAT(starttime,'%H:%i'),'~',DATE_FORMAT(endtime,'%H:%i')) as time,
+	 	 	 	            CONCAT(name,',',tel,',',Address) as userInfo
+					from 	 tacuso_express_log where order_no= #{orderNo} and status=0  limit  1
+	</select>
+	
+	<select id="getOrderEvaluate" parameterType="String" resultType="pd">
+	 	 	 select style,service,content,createtime from  tacuso_order_evaluate where order_no=#{orderNo} order by gmt_modified desc limit 1
+	</select>
+	
+	<update id="editOrderEvaluate" parameterType="pd">
+		update tacuso_order_evaluate 
+		set style = #{style},service = #{service},content = #{content}
+		where order_no = #{orderNo}   order by gmt_modified desc limit 1
+	</update>
+
+	<delete id="delOrderExpress" parameterType="String">
+		delete from
+		tacuso_express_log
+		where
+		order_no = #{orderNo}
+	</delete>
+	
+	<insert id="saveOrderAccounts">
+		INSERT INTO tacuso_order_accounts 
+		(uid, pay_order_no, order_no, shop_code, membership, freight, pay_amount, discount_amount, platform_amount, shop_amount, total_amount, service_amount,type)
+        VALUES 
+        (#{order.uid},#{order.pay_order_no},#{order.order_no},#{order.shop_code},#{order.membership},#{order.freight},#{order.pay_amount},#{order.discount_amount},#{order.platform_amount},#{order.shop_amount},#{order.total_amount},#{order.service_amount},#{order.type});
+	</insert>
+	
+	
+</mapper>

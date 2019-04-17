@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.ConsumeInfoMapper">
+
+    <sql id="consumeInfoColumn">
+        <set>
+          <if test="consumeInfo.info_id!=null">info_id,</if>
+        </set>
+    </sql>
+
+
+    <insert id="createConsumeInfo">
+
+        INSERT INTO tacuso_consume_info
+
+        <trim  prefix="(" suffix=")" suffixOverrides="," >
+            <if test="consumeInfo.info_id!=null">info_id,</if>
+            <if test="consumeInfo.uid!=null">uid,</if>
+            <if test="consumeInfo.wx_uid!=null">wx_uid,</if>
+            <if test="consumeInfo.tshirt_price!=null">tshirt_price,</if>
+            <if test="consumeInfo.shirt_price!=null">shirt_price,</if>
+            <if test="consumeInfo.coat_price!=null">coat_price,</if>
+            <if test="consumeInfo.trousers_price!=null">trousers_price,</if>
+            <if test="consumeInfo.favorite_brand!=null">favorite_brand,</if>
+            <if test="consumeInfo.clothing_manner!=null">clothing_manner,</if>
+            <if test="consumeInfo.shopping_way!=null">shopping_way</if>
+        </trim>
+
+         VALUES
+
+          <trim  prefix="(" suffix=")" suffixOverrides="," >
+            <if test="consumeInfo.info_id!=null">#{consumeInfo.info_id},</if>
+            <if test="consumeInfo.uid!=null">#{consumeInfo.uid},</if>
+            <if test="consumeInfo.wx_uid!=null">#{consumeInfo.wx_uid},</if>
+            <if test="consumeInfo.tshirt_price!=null">#{consumeInfo.tshirt_price},</if>
+            <if test="consumeInfo.shirt_price!=null">#{consumeInfo.shirt_price},</if>
+            <if test="consumeInfo.coat_price!=null">#{consumeInfo.coat_price},</if>
+            <if test="consumeInfo.trousers_price!=null">#{consumeInfo.trousers_price},</if>
+            <if test="consumeInfo.favorite_brand!=null">#{consumeInfo.favorite_brand},</if>
+            <if test="consumeInfo.clothing_manner!=null">#{consumeInfo.clothing_manner},</if>
+            <if test="consumeInfo.shopping_way!=null">#{consumeInfo.shopping_way},</if>
+          </trim>
+
+    </insert>
+
+    <update id="updateConsumeInfo">
+        UPDATE tacuso_consume_info
+        <set>
+            <if test="consumeInfo.info_id!=null">info_id=#{consumeInfo.info_id},</if>
+            <if test="consumeInfo.uid!=null">uid=#{consumeInfo.uid},</if>
+            <if test="consumeInfo.wx_uid!=null">wx_uid=#{consumeInfo.wx_uid},</if>
+            <if test="consumeInfo.tshirt_price!=null">tshirt_price=#{consumeInfo.tshirt_price},</if>
+            <if test="consumeInfo.shirt_price!=null">shirt_price=#{consumeInfo.shirt_price},</if>
+            <if test="consumeInfo.coat_price!=null">coat_price=#{consumeInfo.coat_price},</if>
+            <if test="consumeInfo.trousers_price!=null">trousers_price=#{consumeInfo.trousers_price},</if>
+            <if test="consumeInfo.favorite_brand!=null">favorite_brand=#{consumeInfo.favorite_brand},</if>
+            <if test="consumeInfo.clothing_manner!=null">clothing_manner=#{consumeInfo.clothing_manner},</if>
+            <if test="consumeInfo.shopping_way!=null">shopping_way=#{consumeInfo.shopping_way}</if>
+        </set>
+        where uid = #{consumeInfo.uid}
+    </update>
+
+    <select id="selectConsumeInfoByUid" resultType="com.tacuso.buyer.entity.ConsumeInfo">
+        select * from tacuso_consume_info where uid = #{uid};
+    </select>
+</mapper>

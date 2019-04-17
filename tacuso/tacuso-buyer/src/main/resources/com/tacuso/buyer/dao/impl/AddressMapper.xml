@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tacuso.buyer.dao.AddressMapper">
+    <insert id="createAddress">
+        INSERT  INTO  tacuso_address (uid, name,phone,detail,city,is_main_address,createtime)
+        VALUES (#{address.uid},#{address.name},#{address.phone},#{address.detail},#{address.city},#{address.is_main_address},#{address.createtime});
+    </insert>
+    <update id="updateAddress">
+        UPDATE tacuso_address set name = #{address.name} , phone = #{address.phone} , city=#{address.city}, detail = #{address.detail} , is_main_address=#{address.is_main_address} , updatetime=#{address.updatetime} WHERE address_id=#{address.address_id} and uid = #{address.uid};
+    </update>
+    <update id="setMainAddress">
+        UPDATE tacuso_address set is_main_address = #{address.is_main_address}  WHERE uid = #{address.uid} and address_id = #{address.address_id};
+    </update>
+    <update id="clearMainAddress">
+         UPDATE tacuso_address set is_main_address = 0  WHERE uid = #{address.uid};
+    </update>
+    <select id="selectAddressListByUid" resultType="com.tacuso.buyer.entity.Address">
+        select * from tacuso_address WHERE uid = #{uid};
+    </select>
+     <select id="selectAddressByUid" resultType="com.tacuso.buyer.entity.Address">
+        select  *,CONCAT( REPLACE (city,"/",""), detail) as addressInfo from tacuso_address WHERE uid = #{uid} and is_main_address=1;
+    </select>
+     <select id="selectAddressByUidNoMain" resultType="com.tacuso.buyer.entity.Address">
+        select  *,CONCAT( REPLACE (city,"/",""), detail) as addressInfo from tacuso_address WHERE uid = #{uid} limit 1;
+    </select>
+    <select id="getMainAddress" resultType="com.tacuso.buyer.entity.Address">
+        select address_id,name,phone,REPLACE(city,'/','') as city,detail  from tacuso_address WHERE uid = #{uid} and is_main_address=1 order by gmt_modified desc limit 1;
+    </select>
+    
+     <select id="getAddressById" resultType="com.tacuso.buyer.entity.Address">
+        select address_id,name,phone,REPLACE(city,'/','') as city,detail  from tacuso_address WHERE address_id = #{addressId}
+    </select>
+    
+    <select id="getShopSeliverAddress"  resultType="pd">
+        select t2.take_address,t2.shop_name,t2.taker_phone,t2.taker from  tacuso_order t1,tacuso_shop t2 where
+		t1.shop_code=t2.shop_code
+		and t1.order_no=#{orderNo}
+    </select>
+    
+    
+</mapper>
